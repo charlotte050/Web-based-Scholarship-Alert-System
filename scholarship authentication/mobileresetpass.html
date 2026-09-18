@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+
+  <title>Reset your Password</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    :root {
+      --ink: #16337f;
+      --field-border: #00194E;
+      --error: #FF1909;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(
+        180deg,
+        #0447B2 0%,
+        #2b78ca 24%,
+        #79bce8 58%,
+        #ABE0FF 100%
+      );
+    }
+
+    #app {
+      width: 100%;
+      min-height: 100vh;
+      padding: 0 12px;
+    }
+
+    .card-screen {
+      width: 100%;
+      min-height: calc(100vh - 90px);
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, .12);
+    }
+
+    .card h1 {
+      margin-bottom: 12px;
+      color: var(--ink);
+      font-size: clamp(18px, 4vw, 24px);
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+
+    .card p {
+      margin-bottom: 28px;
+      color: #1a3d92;
+      font-size: clamp(14px, 3vw, 16px);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .group {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: #1a3d92;
+      font-size: clamp(12px, 2.5vw, 14px);
+      font-weight: 600;
+    }
+
+    .pwd-wrap {
+      position: relative;
+    }
+
+    .field {
+      width: 100%;
+      height: 48px;
+      padding: 0 44px 0 14px;
+      border: 1.5px solid var(--field-border);
+      border-radius: 8px;
+      outline: none;
+      background: #fff;
+      color: #1f2937;
+      font-family: inherit;
+      font-size: clamp(13px, 3vw, 15px);
+    }
+
+    .field:focus {
+      box-shadow: 0 0 0 2px rgba(18, 48, 127, .18);
+    }
+
+    .field.error-input {
+      border-color: var(--error);
+      box-shadow: 0 0 0 1px rgba(255, 25, 9, .16);
+    }
+
+    .eye {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      display: flex;
+      width: 24px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background: transparent;
+      color: #3b4a63;
+      cursor: pointer;
+      transform: translateY(-50%);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .eye svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .err {
+      display: none;
+      margin-top: 6px;
+      color: var(--error);
+      font-size: clamp(11px, 2.3vw, 13px);
+      font-weight: 500;
+    }
+
+    .err.show {
+      display: block;
+    }
+
+    .spacer {
+      height: 20px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 48px;
+      height: auto;
+      padding: 14px 24px;
+      border: 0;
+      border-radius: 999px;
+      background: #0b3fc4;
+      color: #fff;
+      font-family: inherit;
+      font-size: clamp(14px, 3vw, 16px);
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Success popup */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      background: rgba(7, 24, 54, .5);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+      border-radius: 20px;
+      background-color: #fff;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, .25);
+    }
+
+    .modal-header-bg {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      min-height: 100px;
+      height: auto;
+      background: linear-gradient(
+        180deg,
+        #083AA7 0%,
+        #4580FF 100%
+      );
+    }
+
+    .check-circle {
+      position: absolute;
+      bottom: -28px;
+      display: flex;
+      width: 56px;
+      height: 56px;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid #fff;
+      border-radius: 50%;
+      background: linear-gradient(
+        180deg,
+        #083AA7 0%,
+        #4580FF 100%
+      );
+      color: #fff;
+      font-size: 24px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
+    }
+
+    .modal-content-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 24px 28px;
+      background-color: #fff;
+      text-align: center;
+    }
+
+    .modal-title {
+      margin-bottom: 10px;
+      color: #111827;
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+      font-size: clamp(16px, 4vw, 19px);
+      font-weight: 800;
+      letter-spacing: -.2px;
+    }
+
+    .modal-text {
+      max-width: 320px;
+      margin-bottom: 24px;
+      color: #5A6D96;
+      font-size: clamp(13px, 3vw, 15px);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .btn-modal-return {
+      width: 100%;
+      min-height: 48px;
+      height: auto;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(
+        180deg,
+        #083AA7 0%,
+        #4580FF 100%
+      );
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: clamp(14px, 3vw, 16px);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(69, 128, 255, .35);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-modal-return:hover {
+      opacity: .92;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 600px) {
+      .card {
+        padding: 32px 20px;
+      }
+      
+      .modal-content-card {
+        padding: 34px 20px 24px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .card {
+        padding: 28px 18px;
+        border-radius: 16px;
+      }
+      
+      .card h1 {
+        font-size: 20px;
+      }
+      
+      .field {
+        height: 44px;
+        padding: 0 40px 0 12px;
+      }
+      
+      .eye {
+        width: 22px;
+        height: 22px;
+        right: 10px;
+      }
+      
+      .eye svg {
+        width: 18px;
+        height: 18px;
+      }
+      
+      .btn {
+        min-height: 44px;
+        padding: 12px 20px;
+      }
+      
+      .modal-box {
+        max-width: 90%;
+      }
+      
+      .check-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+
+  <section class="card-screen">
+    <div class="card">
+      <h1>Reset Your Password</h1>
+      <p>Set your new password</p>
+
+      <form id="form-reset" novalidate>
+        <div class="group">
+          <label class="label" for="newPassword">
+            New Password
+          </label>
+
+          <div class="pwd-wrap">
+            <input
+              class="field"
+              type="password"
+              id="newPassword"
+              placeholder="••••••••">
+
+            <button
+              type="button"
+              class="eye"
+              onclick="peek('newPassword', this)"
+              aria-label="Show password">
+            </button>
+          </div>
+
+          <div class="err" id="newPasswordError"></div>
+        </div>
+
+        <div class="group">
+          <label class="label" for="confirmNewPassword">
+            Confirm New Password
+          </label>
+
+          <div class="pwd-wrap">
+            <input
+              class="field"
+              type="password"
+              id="confirmNewPassword"
+              placeholder="••••••••">
+
+            <button
+              type="button"
+              class="eye"
+              onclick="peek('confirmNewPassword', this)"
+              aria-label="Show password">
+            </button>
+          </div>
+
+          <div class="err" id="confirmNewPasswordError"></div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <button
+          type="submit"
+          class="btn"
+          id="btn-update">
+          Update Password
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <div id="successModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header-bg">
+        <div class="check-circle">
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+
+      <div class="modal-content-card">
+        <div class="modal-title">
+          Password Reset Successfully
+        </div>
+
+        <div class="modal-text">
+          Your password has been changed successfully.
+        </div>
+
+        <button
+          class="btn-modal-return"
+          onclick="closeModalAndLogin()">
+          Return to Log in
+        </button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <script>
+    var EYE_OPEN =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>';
+
+    var EYE_SHUT =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/><line x1="3" y1="21" x2="21" y2="3"/></svg>';
+
+    document.querySelectorAll('.eye').forEach(function(button) {
+      button.innerHTML = EYE_OPEN;
+    });
+
+    function peek(id, button) {
+      var input = document.getElementById(id);
+      var hidden = input.type === 'password';
+
+      input.type = hidden ? 'text' : 'password';
+      button.innerHTML = hidden ? EYE_SHUT : EYE_OPEN;
+    }
+
+    function clearFieldError(inputElem, errorElem) {
+      if (inputElem) {
+        inputElem.classList.remove('error-input');
+      }
+
+      if (errorElem) {
+        errorElem.textContent = '';
+        errorElem.style.display = 'none';
+      }
+    }
+
+    function showFieldError(inputElem, errorElem, message) {
+      if (inputElem) {
+        inputElem.classList.add('error-input');
+      }
+
+      if (errorElem) {
+        errorElem.textContent = message;
+        errorElem.style.display = 'block';
+      }
+    }
+
+    document
+      .getElementById('form-reset')
+      .addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var isValid = true;
+
+        var newPassword =
+          document.getElementById('newPassword');
+
+        var newPasswordError =
+          document.getElementById('newPasswordError');
+
+        var confirmNewPassword =
+          document.getElementById('confirmNewPassword');
+
+        var confirmNewPasswordError =
+          document.getElementById('confirmNewPasswordError');
+
+        clearFieldError(newPassword, newPasswordError);
+        clearFieldError(
+          confirmNewPassword,
+          confirmNewPasswordError
+        );
+
+        if (!newPassword.value) {
+          showFieldError(
+            newPassword,
+            newPasswordError,
+            'Enter your password'
+          );
+
+          isValid = false;
+        } else if (newPassword.value.length < 8) {
+          showFieldError(
+            newPassword,
+            newPasswordError,
+            'Password must be at least 8 characters'
+          );
+
+          isValid = false;
+        }
+
+        if (confirmNewPassword.value !== newPassword.value) {
+          showFieldError(
+            confirmNewPassword,
+            confirmNewPasswordError,
+            'Does not match your input password'
+          );
+
+          isValid = false;
+        }
+
+        if (isValid) {
+          document.getElementById('successModal').style.display = 'flex';
+        }
+      });
+
+    function closeModalAndLogin() {
+      document.getElementById('successModal').style.display = 'none';
+      document.getElementById('form-reset').reset();
+    }
+  </script>
+
+</body>
+</html>

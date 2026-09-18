@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPSU-SM Scholarship System Guidance Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(180deg, #0447B2 0%, #8CC9EA 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .view.active {
+            display: block;
+            opacity: 1;
+        }
+        #resetView {
+            width: min(100%, 390px);
+            min-height: 420px;
+            margin: 0 auto;
+        }
+        #forgotView {
+            width: min(100%, 390px);
+            min-height: 400px;
+            margin: 0 auto;
+        }
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo-title-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .logo {
+            width: 62px;
+            height: 78px;
+            object-fit: contain;
+        }
+        .university-info {
+            text-align: left;
+        }
+        .university-info span {
+            display: block;
+            font-size: 13px;
+            color: #0155AF;
+            font-weight: 600;
+        }
+        .university-info h2 {
+            font-size: 20px;
+            color: #09338E;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+        .system-title {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            font-size: 19px;
+            color: #1D49A8;
+            font-weight: 800;
+            margin-top: 5px;
+            letter-spacing: 0.1px;
+            line-height: 1.2;
+            transform: scaleX(0.98);
+        }
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #072463;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #1D49A8;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #000000;
+            outline: none;
+            transition: border-color 0.2s;
+            background-color: #ffffff;
+        }
+        input.error-input {
+            border-color: #ef4444 !important;
+        }
+        .error-message {
+            font-size: 11px;
+            color: #ef4444;
+            display: none;
+            text-align: left;
+        }
+        .success-message {
+            font-size: 11px;
+            color: #399400;
+            display: none;
+            text-align: left;
+        }
+        input::placeholder {
+            color: #747474;
+        }
+        input:focus {
+            border-color: #1D49A8;
+            box-shadow: 0 0 0 2px rgba(29, 73, 168, 0.12);
+        }
+        .password-container {
+            position: relative;
+        }
+        .password-container i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .forgot-password-link {
+            text-align: right;
+            margin-bottom: 15px;
+            margin-top: -5px;
+        }
+        .forgot-password-link a {
+            font-size: 12px;
+            color: #1d4ed8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+        .btn-submit, .btn-secondary {
+            width: 100%;
+            background-color: #1D49A8;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn-submit:hover, .btn-secondary:hover {
+            background-color: #163a85;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 18px 0;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .divider span {
+            padding: 0 10px;
+        }
+        .btn-google {
+            width: 100%;
+            background-color: #1D49A8;
+            color: #ffffff;
+            border: none;
+            padding: 11px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn-google:hover {
+            background-color: #163a85;
+        }
+        .btn-google img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            display: block;
+        }
+        .card-title {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            font-size: 27px;
+            font-weight: 800;
+            color: #1D49A8;
+            margin-top: 38px;
+            margin-bottom: 13px;
+            line-height: 1.1;
+            letter-spacing: 0.2px;
+            font-style: normal;
+            text-align: left;
+            transform-origin: left center;
+            white-space: nowrap;
+            margin-left: 0;
+        }
+        .card-desc {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            color: #636A79;
+            font-weight: 600;
+            margin-bottom: 18px;
+            line-height: 1.45;
+            margin-top: 0;
+            text-align: left;
+            max-width: 100%;
+        }
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 24, 54, 0.12);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        .modal-box {
+            width: 100%;
+            max-width: 380px;
+            background-color: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .modal-header-bg {
+            height: 120px;
+            background: linear-gradient(180deg, #083AA7 0%, #4580FF 100%);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        .check-circle {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(180deg, #083AA7 0%, #4580FF 100%);
+            border: 4px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 22px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            position: absolute;
+            bottom: -28px;
+        }
+        .modal-content-card {
+            background-color: #ffffff;
+            padding: 40px 26px 30px 26px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-title {
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 10px;
+            letter-spacing: -0.2px;
+        }
+        .modal-text {
+            font-size: 13px;
+            color: #5A6D96;
+            line-height: 1.5;
+            margin-bottom: 22px;
+            font-weight: 500;
+        }
+        .btn-modal-return {
+            width: 100%;
+            background: linear-gradient(180deg, #083AA7 0%, #4580FF 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(69, 128, 255, 0.35);
+            transition: opacity 0.2s;
+        }
+        .btn-modal-return:hover {
+            opacity: 0.92;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- VIEW 1: Main Login Screen -->
+        <div id="mainAuthView" class="view active">
+            <div class="header">
+                <div class="logo-title-area">
+                    <img src="CAPSULOGO.png" alt="CapSU Logo" class="logo">
+                    <div class="university-info">
+                        <span>Republic of The Philippines</span>
+                        <h2>CAPIZ STATE UNIVERSITY</h2>
+                        <span style="font-size: 15px; color: #1D49A8;">MAMBUSAO SATELLITE COLLEGE</span>
+                    </div>
+                </div>
+                <div class="system-title">Web-Based Scholarship Submission<br>Alert System</div>
+            </div>
+            <!-- Login Pane Only -->
+            <div id="loginPane" class="tab-pane active">
+                <form id="loginForm" onsubmit="handleLoginSubmit(event)" novalidate>
+                    <div class="form-group">
+                        <label>Gmail</label>
+                        <input type="text" id="loginGmail" placeholder="guidancestaff@gmail.com" oninput="handleTypingClear(this); clearFieldError(this, document.getElementById('loginGmailError'));">
+                        <div id="loginGmailError" class="error-message" style="margin-top: 4px;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-container">
+                            <input type="password" id="loginPassword" placeholder="••••••••" oninput="handleTypingClear(this); clearFieldError(this, document.getElementById('loginPasswordError'));">
+                            <i class="fa-regular fa-eye" onclick="togglePassword('loginPassword')"></i>
+                        </div>
+                        <div id="loginPasswordError" class="error-message" style="margin-top: 4px;"></div>
+                    </div>
+                    <div class="forgot-password-link">
+                        <a href="#" onclick="showView('forgotView')">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn-submit">Log In</button>
+                </form>
+                <div>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    <button class="btn-google" onclick="handleGoogleSignIn()">
+                        <img src="google.png" alt="Google logo"> Continue with Google
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- VIEW 2: Forgot Password Screen -->
+        <div id="forgotView" class="view">
+            <div class="card-title">Forgot your Password?</div>
+            <div class="card-desc">Enter the email address associated with your account and we’ll send you a password reset link.</div>
+            
+            <form id="forgotForm" onsubmit="handleForgotSubmit(event)" novalidate style="margin-top: 20px; display: flex; flex-direction: column; gap: 26px; margin-bottom: 18px;">
+                <div class="form-group" style="margin-top: 18px; margin-bottom: 8px;">
+                    <label>Email</label>
+                    <input type="email" id="forgotEmail" placeholder="student@gmail.com" oninput="clearForgotPasswordState();">
+                    <div id="forgotEmailError" class="error-message" style="margin-top: 4px;"></div>
+                    <div id="forgotEmailSuccess" class="success-message" style="margin-top: 4px;"></div>
+                </div>
+                <button type="submit" class="btn-secondary" style="margin-top: 0;">Send Reset Link</button>
+                <button type="button" class="btn-secondary" style="margin-top: 0;" onclick="returnToLogin();">Back to Login</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function showView(viewId) {
+            if (viewId === 'forgotView') {
+                clearForgotPasswordState();
+                document.getElementById('forgotEmail').value = '';
+            }
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+            const container = field.closest('.password-container');
+            const icon = container ? container.querySelector('i') : null;
+            if (!icon) return;
+            const isPassword = field.type === 'password';
+            field.type = isPassword ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !isPassword);
+            icon.classList.toggle('fa-eye-slash', isPassword);
+        }
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        function clearFieldError(inputElem, errorElem) {
+            if (inputElem) inputElem.classList.remove('error-input');
+            if (errorElem) {
+                errorElem.textContent = '';
+                errorElem.style.display = 'none';
+            }
+        }
+        function showFieldError(inputElem, errorElem, message) {
+            if (inputElem) inputElem.classList.add('error-input');
+            if (errorElem) {
+                errorElem.textContent = message;
+                errorElem.style.display = 'block';
+            }
+        }
+        function clearLoginErrors() {
+            clearFieldError(
+                document.getElementById('loginGmail'),
+                document.getElementById('loginGmailError')
+            );
+            clearFieldError(
+                document.getElementById('loginPassword'),
+                document.getElementById('loginPasswordError')
+            );
+        }
+        function clearForgotPasswordState() {
+            const forgotEmail = document.getElementById('forgotEmail');
+            const forgotEmailError = document.getElementById('forgotEmailError');
+            const forgotEmailSuccess = document.getElementById('forgotEmailSuccess');
+            clearFieldError(forgotEmail, forgotEmailError);
+            if (forgotEmailSuccess) {
+                forgotEmailSuccess.textContent = '';
+                forgotEmailSuccess.style.display = 'none';
+            }
+        }
+        function returnToLogin() {
+            clearLoginErrors();
+            clearForgotPasswordState();
+            document.getElementById('forgotEmail').value = '';
+            showView('mainAuthView');
+        }
+        // Automatically clears the placeholder on first keystroke
+        function handleTypingClear(inputElem) {
+            if (!inputElem.dataset.cleared && inputElem.value.length > 0) {
+                inputElem.placeholder = '';
+                inputElem.dataset.cleared = 'true';
+            }
+        }
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            let isValid = true;
+            const loginGmail = document.getElementById('loginGmail');
+            const loginGmailError = document.getElementById('loginGmailError');
+            const loginPassword = document.getElementById('loginPassword');
+            const loginPasswordError = document.getElementById('loginPasswordError');
+            
+            clearFieldError(loginGmail, loginGmailError);
+            clearFieldError(loginPassword, loginPasswordError);
+            
+            const gmailVal = loginGmail.value.trim();
+            if (!gmailVal) {
+                showFieldError(loginGmail, loginGmailError, "Enter your registered Gmail address.");
+                isValid = false;
+            } else if (!isValidEmail(gmailVal)) {
+                showFieldError(loginGmail, loginGmailError, "Enter your gmail");
+                isValid = false;
+            }
+            if (!loginPassword.value) {
+                showFieldError(loginPassword, loginPasswordError, "Enter your password");
+                isValid = false;
+            } else if (loginPassword.value.length < 8) {
+                showFieldError(loginPassword, loginPasswordError, "Password must be at least 8 characters");
+                isValid = false;
+            }
+            if (isValid) {
+                alert('Authentication successful!');
+            }
+        }
+        function handleForgotSubmit(event) {
+            event.preventDefault();
+            let isValid = true;
+            const forgotEmail = document.getElementById('forgotEmail');
+            const forgotEmailError = document.getElementById('forgotEmailError');
+            const forgotEmailSuccess = document.getElementById('forgotEmailSuccess');
+            
+            clearFieldError(forgotEmail, forgotEmailError);
+            if (forgotEmailSuccess) {
+                forgotEmailSuccess.textContent = '';
+                forgotEmailSuccess.style.display = 'none';
+            }
+            
+            const emailVal = forgotEmail.value.trim();
+            if (!emailVal) {
+                showFieldError(forgotEmail, forgotEmailError, "Enter your registered Gmail address");
+                isValid = false;
+            } else if (!isValidEmail(emailVal)) {
+                showFieldError(forgotEmail, forgotEmailError, "Enter a valid email address");
+                isValid = false;
+            }
+            
+            if (isValid) {
+                if (forgotEmailSuccess) {
+                    forgotEmailSuccess.textContent = "Password reset link has been sent to " + emailVal + ".";
+                    forgotEmailSuccess.style.display = 'block';
+                }
+            }
+        }
+        function handleGoogleSignIn() {
+            alert('Redirecting to Google Sign-In...');
+        }
+    </script>
+</body>
+</html>

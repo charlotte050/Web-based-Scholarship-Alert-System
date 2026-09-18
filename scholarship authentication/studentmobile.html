@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAPSU-SM Scholarship System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#0b34a8;
+  --deep2:#0a3bb5;
+  --navy:#12307f;
+  --btn:#0b3fc4;
+  --ink:#16337f;
+  --light:#a9dcfb;
+  --field:#ffffff;
+  --ph:#9aa3ad;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{
+  width:100%;
+  overflow-x:hidden;
+  font-family:'Poppins','Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#eaf4fd;
+}
+body{display:flex;justify-content:center;}
+#app{
+  width:100%;
+  max-width:768px;
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+  background:#fff;
+}
+.screen{display:none;min-height:100vh;width:100%;flex-direction:column;}
+.screen.active{display:flex;}
+#screen-forgot.active .card{animation:forgotCardReveal .42s cubic-bezier(.22,1,.36,1) both;}
+@keyframes forgotCardReveal{
+  from{opacity:0;transform:translateY(24px) scale(.98);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.toggle.tab-forward .thumb{animation:tabForward .36s cubic-bezier(.4,0,.2,1);}
+.toggle.tab-back .thumb{animation:tabBack .36s cubic-bezier(.4,0,.2,1);}
+@keyframes tabForward{
+  from{transform:translateX(0)}
+  to{transform:translateX(100%)}
+}
+@keyframes tabBack{
+  from{transform:translateX(100%)}
+  to{transform:translateX(0)}
+}
+@media (prefers-reduced-motion:reduce){
+  #screen-forgot.active .card,.toggle.tab-forward .thumb,.toggle.tab-back .thumb{animation:none;}
+}
+/* ---------- HEADER (register / login) ---------- */
+.header{background:#fff;padding:46px 22px 0;}
+.brand{display:flex;align-items:center;justify-content:center;gap:12px;}
+.brand img{width:76px;height:78px;object-fit:contain;display:block;}
+.brand-text{line-height:1.35;color:var(--navy);}
+.brand-text span{display:block;font-size:12.5px;font-weight:500;letter-spacing:.1px;}
+.brand-text span:nth-child(1){color:#0155AF;}
+.brand-text span:nth-child(2){color:#09338E;}
+.brand-text span:nth-child(3){color:#1D49A8;}
+.brand-text span.b{font-weight:700;}
+.page-title{
+  text-align:center;
+  color:var(--navy);
+  font-family:'Montserrat','Segoe UI',sans-serif;
+  font-size:clamp(14px,5vw,19px);
+  font-weight:800;
+  color:#1D49A8;
+  line-height:1.2;
+  margin:26px 6px 0;
+  letter-spacing:-.2px;
+}
+.page-title span{display:block;white-space:nowrap;transform:scaleX(.92);}
+/* ---------- BLUE PANEL ---------- */
+.panel{
+  flex:1;
+  margin-top:26px;
+  border-radius:30px 30px 0 0;
+  background:linear-gradient(180deg,#0447B2 0%,#2b78ca 30%,#79bce8 62%,#ABE0FF 100%);
+  padding:22px 22px 40px;
+  display:flex;
+  flex-direction:column;
+}
+/* ---------- TOGGLE ---------- */
+.toggle{
+  position:relative;
+  display:flex;
+  background:#fff;
+  border-radius:999px;
+  padding:5px;
+  box-shadow:0 5px 14px rgba(0,0,0,.18);
+  margin-bottom:34px;
+}
+.toggle .thumb{
+  position:absolute;
+  top:5px;left:5px;
+  width:calc(50% - 5px);
+  height:calc(100% - 10px);
+  background:var(--btn);
+  border-radius:999px;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.toggle.right .thumb{transform:translateX(100%);}
+.toggle button{
+  position:relative;
+  z-index:1;
+  flex:1;
+  border:0;
+  background:transparent;
+  padding:10px 0;
+  font-family:inherit;
+  font-size:13px;
+  font-weight:600;
+  color:#8b8f96;
+  cursor:pointer;
+  transition:color .25s;
+}
+.toggle button.on{color:#fff;}
+/* ---------- FORM ---------- */
+.label{
+  display:block;
+  color:#fff;
+  font-size:11.5px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+.field{
+  width:100%;
+  height:31px;
+  border:1px solid #00194E;
+  border-radius:7px;
+  background:var(--field);
+  padding:0 11px;
+  font-family:inherit;
+  font-size:12px;
+  color:#1f2937;
+  outline:none;
+}
+.field::placeholder{color:var(--ph);font-size:11.5px;}
+.field:focus{box-shadow:0 0 0 2px rgba(255,255,255,.6);}
+.group{margin-bottom:15px;}
+#form-register #register-password-group{margin-bottom:8px;}
+.row{display:flex;gap:10px;margin-bottom:0;}
+.row .group{flex:1;margin-bottom:0;}
+.pwd-wrap{position:relative;}
+.pwd-wrap .field{padding-right:34px;}
+.eye{
+  position:absolute;
+  right:9px;top:50%;
+  transform:translateY(-50%);
+  width:18px;height:18px;
+  border:0;background:none;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#5b6470;
+}
+.eye svg{width:17px;height:17px;}
+.sub-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-top:4px;
+}
+.hint{
+  color:#cfe6fb;
+  font-size:10px;
+  font-weight:500;
+}
+.link-right{
+  display:block;
+  text-align:right;
+  color:#eaf4ff;
+  font-size:11px;
+  font-weight:600;
+  margin-top:7px;
+  cursor:pointer;
+}
+.link-right:hover{text-decoration:underline;}
+.err{
+  display:none;
+  color:#FFB3AE;
+  font-size:10px;
+  font-weight:500;
+}
+#form-register #e-mail,
+#form-register #e-pass2{margin-top:4px;}
+#form-register #e-mail{color:#FFA29C;}
+#form-register #e-pass,
+#form-register #e-pass2{color:#960A00;}
+.err.show{display:block;}
+.field.error-input{
+  border:1.5px solid #FF1909;
+  box-shadow:0 0 0 1px rgba(255,25,9,.16);
+}
+/* ---------- BUTTONS ---------- */
+.btn{
+  width:100%;
+  height:37px;
+  border:0;
+  border-radius:999px;
+  background:var(--btn);
+  color:#fff;
+  font-family:inherit;
+  font-size:12.5px;
+  font-weight:600;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  transition:filter .15s,transform .1s;
+}
+.btn:active{transform:scale(.985);filter:brightness(.92);}
+.btn img{width:17px;height:17px;object-fit:contain;background:#fff;border-radius:50%;padding:1px;}
+.or{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:16px 4px;
+  color:#fff;
+  font-size:11px;
+  font-weight:600;
+}
+.or::before,.or::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:rgba(255,255,255,.75);
+}
+.spacer-sm{height:11px;}
+.spacer-lg{height:44px;}
+/* ---------- CARD SCREENS (forgot / reset) ---------- */
+.card-screen{
+  background:linear-gradient(180deg,#0447B2 0%,#2b78ca 24%,#79bce8 58%,#ABE0FF 100%);
+  padding:120px 14px 0;
+}
+.card{
+  background:#fff;
+  border-radius:26px;
+  padding:145px 44px 46px;
+  min-height:598px;
+  box-shadow:0 8px 26px rgba(0,0,0,.12);
+}
+.card h1{
+  color:var(--ink);
+  font-size:21px;
+  font-weight:700;
+  letter-spacing:-.3px;
+  margin-bottom:16px;
+}
+.card p{
+  color:#1a3d92;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.45;
+  margin-bottom:34px;
+}
+.card .label{color:#1a3d92;font-size:11.5px;font-weight:600;margin-bottom:7px;}
+.card .group{margin-bottom:18px;}
+.card .field{
+  border:1.5px solid #12307f;
+  height:30px;
+  border-radius:6px;
+  font-size:12px;
+}
+.card .field.error-input{border-color:#FF1909;box-shadow:0 0 0 1px rgba(255,25,9,.16);}
+.card .field:focus{box-shadow:0 0 0 2px rgba(18,48,127,.18);}
+.card .eye{color:#3b4a63;}
+.card .err{color:#FF1909;}
+.card .btn{margin-top:8px;}
+.card .btn + .btn{margin-top:12px;}
+.forgot-success{
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  margin-top: 4px;
+  color: #399400;
+  font-size: 8px; /* Slightly smaller size to fit long emails comfortably */
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.forgot-success.show{
+  visibility: visible;
+  height: auto;
+}
+.ok{
+  display:none;
+  background:#e6f5ea;
+  border:1px solid #9ed3ae;
+  color:#1d6b38;
+  font-size:11.5px;
+  font-weight:600;
+  border-radius:8px;
+  padding:9px 11px;
+  margin-bottom:14px;
+  text-align:center;
+}
+.ok.show{display:block;}
+@media (max-width:370px){
+  .page-title{font-size:clamp(14px,5vw,17px);}
+  .brand-text span{font-size:11.5px;}
+  .brand img{width:66px;height:68px;}
+  .panel{padding:20px 18px 34px;}
+  .card{padding:120px 32px 40px;}
+}
+@media (min-width:400px){
+  .card{padding-top:150px;}
+}
+@media (min-width:600px){
+  .header{padding-left:clamp(28px,8vw,80px);padding-right:clamp(28px,8vw,80px);}
+  .panel{padding-left:clamp(28px,8vw,80px);padding-right:clamp(28px,8vw,80px);}
+  .panel form,.panel > .or,.panel > .btn{width:100%;max-width:560px;margin-left:auto;margin-right:auto;}
+  .card{width:100%;max-width:600px;margin:0 auto;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- ============ REGISTER ============ -->
+  <section class="screen active" id="screen-register">
+    <div class="header">
+      <div class="brand">
+        <img src="CAPSULOGO.png" alt="CAPSU Logo">
+        <div class="brand-text">
+          <span>Republic of The Philippines</span>
+          <span class="b">CAPIZ STATE UNIVERSITY</span>
+          <span class="b">MAMBUSAO SATELLITE COLLEGE</span>
+        </div>
+      </div>
+      <h1 class="page-title"><span>Web-Based Scholarship Submission</span><span>Alert System</span></h1>
+    </div>
+    <div class="panel">
+      <div class="toggle" id="toggle-reg">
+        <div class="thumb"></div>
+        <button class="on" onclick="go('register')">Register</button>
+        <button onclick="go('login')">Log In</button>
+      </div>
+      <form id="form-register" novalidate>
+        <div class="row">
+          <div class="group">
+            <label class="label" for="r-first">First name</label>
+            <input class="field" type="text" id="r-first">
+          </div>
+          <div class="group">
+            <label class="label" for="r-middle">Middle name</label>
+            <input class="field" type="text" id="r-middle">
+          </div>
+          <div class="group">
+            <label class="label" for="r-last">Last name</label>
+            <input class="field" type="text" id="r-last">
+          </div>
+        </div>
+        <div class="group" style="margin-top:4px; margin-bottom:15px;">
+          <div class="err" id="e-names">Fill in your full name</div>
+        </div>
+        <div class="group">
+          <label class="label" for="r-mail">Gmail</label>
+          <input class="field" type="email" id="r-mail" placeholder="student@gmail.com" autocomplete="email">
+          <div class="err" id="e-mail"></div>
+        </div>
+        <div class="group" id="register-password-group">
+          <label class="label" for="r-pass">Password</label>
+          <div class="pwd-wrap">
+            <input class="field" type="password" id="r-pass" placeholder="••••••••">
+            <button type="button" class="eye" onclick="peek('r-pass',this)" aria-label="Show password"></button>
+          </div>
+          <div class="sub-row">
+            <div class="err" id="e-pass" style="margin-top:0;">Enter your password</div>
+            <span class="hint" style="margin-left:auto;">Atleast 8 characters</span>
+          </div>
+        </div>
+        <div class="group">
+          <label class="label" for="r-pass2">Confirm Password</label>
+          <div class="pwd-wrap">
+            <input class="field" type="password" id="r-pass2" placeholder="••••••••">
+            <button type="button" class="eye" onclick="peek('r-pass2',this)" aria-label="Show password"></button>
+          </div>
+          <div class="err" id="e-pass2">Passwords do not match.</div>
+        </div>
+        <div class="spacer-sm"></div>
+        <button type="submit" class="btn">Sign up</button>
+      </form>
+      <div class="or">or</div>
+      <button class="btn" onclick="alert('Google sign-in is not connected yet.')">
+        <img src="google.png" alt="Google">Continue with Google
+      </button>
+    </div>
+  </section>
+  <!-- ============ LOGIN ============ -->
+  <section class="screen" id="screen-login">
+    <div class="header">
+      <div class="brand">
+        <img src="CAPSULOGO.png" alt="CAPSU Logo">
+        <div class="brand-text">
+          <span>Republic of The Philippines</span>
+          <span class="b">CAPIZ STATE UNIVERSITY</span>
+          <span class="b">MAMBUSAO SATELLITE COLLEGE</span>
+        </div>
+      </div>
+      <h1 class="page-title"><span>Web-Based Scholarship Submission</span><span>Alert System</span></h1>
+    </div>
+    <div class="panel">
+      <div class="toggle right" id="toggle-log">
+        <div class="thumb"></div>
+        <button onclick="go('register')">Register</button>
+        <button class="on" onclick="go('login')">Log In</button>
+      </div>
+      <form id="form-login" novalidate>
+        <div class="group">
+          <label class="label" for="l-mail">Gmail</label>
+          <input class="field" type="email" id="l-mail" placeholder="student@gmail.com" autocomplete="email">
+          <div class="err" id="e-lmail"></div>
+        </div>
+        <div class="group" style="margin-bottom:0">
+          <label class="label" for="l-pass">Password</label>
+          <div class="pwd-wrap">
+            <input class="field" type="password" id="l-pass" placeholder="••••••••">
+            <button type="button" class="eye" onclick="peek('l-pass',this)" aria-label="Show password"></button>
+          </div>
+          <div class="err" id="e-lpass">Enter your password</div>
+          <span class="link-right" onclick="go('forgot')">Forgot Password?</span>
+        </div>
+        <div class="spacer-lg"></div>
+        <button type="submit" class="btn">Log In</button>
+      </form>
+      <div class="or">or</div>
+      <button class="btn" onclick="alert('Google sign-in is not connected yet.')">
+        <img src="google.png" alt="Google">Continue with Google
+      </button>
+    </div>
+  </section>
+  <!-- ============ FORGOT PASSWORD ============ -->
+  <section class="screen card-screen" id="screen-forgot">
+    <div class="card">
+      <h1>Forgot Your Password?</h1>
+      <p>Enter the email address associated with your account and we'll send you a password reset link.</p>
+      <form id="form-forgot" novalidate>
+        <div class="group">
+          <label class="label" for="f-mail">Gmail</label>
+          <input class="field" type="email" id="f-mail" placeholder="student@gmail.com" autocomplete="email">
+          <div class="err" id="e-fmail"></div>
+          <div class="forgot-success" id="forgotSuccess"></div>
+        </div>
+        <div style="height:24px"></div>
+        <button type="submit" class="btn">Send Reset Link</button>
+        <button type="button" class="btn" onclick="go('login')">Back to Login</button>
+      </form>
+    </div>
+  </section>
+</div>
+<script>
+/* ---------- eye icons ---------- */
+var EYE_OPEN  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>';
+var EYE_SHUT  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/><line x1="3" y1="21" x2="21" y2="3"/></svg>';
+document.querySelectorAll('.eye').forEach(function(b){ b.innerHTML = EYE_OPEN; });
+function peek(id, btn){
+  var input = document.getElementById(id);
+  var hidden = input.type === 'password';
+  input.type = hidden ? 'text' : 'password';
+  btn.innerHTML = hidden ? EYE_SHUT : EYE_OPEN;
+}
+/* ---------- navigation ---------- */
+function go(name){
+  var current = document.querySelector('.screen.active');
+  var target = document.getElementById('screen-' + name);
+  var isAuthSwitch = current && target &&
+    (current.id === 'screen-register' || current.id === 'screen-login') &&
+    (target.id === 'screen-register' || target.id === 'screen-login');
+  if (current && current.id === 'screen-register' && current !== target){
+    clearErrors(['e-names','e-mail','e-pass','e-pass2']);
+  }
+  if (current && current.id === 'screen-login' && current !== target){
+    clearErrors(['e-lmail','e-lpass']);
+  }
+  if (current && current.id === 'screen-forgot' && current !== target){
+    clearErrors(['e-fmail']);
+    document.getElementById('forgotSuccess').classList.remove('show');
+  }
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.remove('active');
+  });
+  document.querySelectorAll('.toggle').forEach(function(toggle){
+    toggle.classList.remove('tab-forward', 'tab-back');
+  });
+  target.classList.add('active');
+  if (isAuthSwitch && current.id !== target.id){
+    var direction = current.id === 'screen-register' ? 'forward' : 'back';
+    target.querySelector('.toggle').classList.add('tab-' + direction);
+  }
+  window.scrollTo(0, 0);
+}
+/* ---------- helpers ---------- */
+function show(id, on, msg){
+  var el = document.getElementById(id);
+  if (msg) el.textContent = msg;
+  el.classList.toggle('show', !!on);
+  var fields = id === 'e-names'
+    ? document.querySelectorAll('#r-first, #r-middle, #r-last')
+    : (el.closest('.group') ? el.closest('.group').querySelectorAll('.field') : []);
+  fields.forEach(function(field){ field.classList.toggle('error-input', !!on); });
+}
+function clearErrors(ids){ ids.forEach(function(i){ show(i, false); }); }
+function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
+function val(id){ return document.getElementById(id).value; }
+/* ---------- register ---------- */
+document.getElementById('form-register').addEventListener('submit', function(e){
+  e.preventDefault();
+  clearErrors(['e-names','e-mail','e-pass','e-pass2']);
+  var ok = true;
+  if (!val('r-first').trim() || !val('r-last').trim()){
+    show('e-names', true, 'Fill in your full name');
+    ok = false;
+  }
+  if (!val('r-mail').trim()){
+    show('e-mail', true, 'Gmail is required'); ok = false;
+  } else if (!validEmail(val('r-mail'))){
+    show('e-mail', true, 'Enter a valid email address.'); ok = false;
+  }
+  if (!val('r-pass')){
+    show('e-pass', true, 'Enter your password'); ok = false;
+  } else if (val('r-pass').length < 8){
+    show('e-pass', true, 'Password must be at least 8 characters.'); ok = false;
+  }
+  if (!val('r-pass2')){
+    show('e-pass2', true, 'Please confirm your password.'); ok = false;
+  } else if (val('r-pass') !== val('r-pass2')){
+    show('e-pass2', true, 'Passwords do not match.'); ok = false;
+  }
+  if (ok){
+    alert('Account created. You can now log in.');
+    this.reset();
+    go('login');
+  }
+});
+/* ---------- login ---------- */
+document.getElementById('form-login').addEventListener('submit', function(e){
+  e.preventDefault();
+  clearErrors(['e-lmail','e-lpass']);
+  var ok = true;
+  if (!val('l-mail').trim()){
+    show('e-lmail', true, 'Gmail is required'); ok = false;
+  } else if (!validEmail(val('l-mail'))){
+    show('e-lmail', true, 'Enter a valid email address.'); ok = false;
+  }
+  if (!val('l-pass')){
+    show('e-lpass', true, 'Enter your password'); ok = false;
+  }
+  if (ok) alert('Logged in as ' + val('l-mail').trim());
+});
+/* ---------- forgot ---------- */
+document.getElementById('form-forgot').addEventListener('submit', function(e){
+  e.preventDefault();
+  clearErrors(['e-fmail']);
+  var successEl = document.getElementById('forgotSuccess');
+  successEl.classList.remove('show');
+  var ok = true;
+  var emailVal = val('f-mail').trim();
+  if (!emailVal){
+    show('e-fmail', true, 'Enter your registered Gmail address.'); 
+    ok = false;
+  } else if (!validEmail(emailVal)){
+    show('e-fmail', true, 'Enter a valid email address.'); 
+    ok = false;
+  }
+  if (ok) {
+    successEl.textContent = 'Password reset link has been sent to ' + emailVal;
+    successEl.classList.add('show');
+    this.reset();
+  }
+});
+</script>
+</body>
+</html>
